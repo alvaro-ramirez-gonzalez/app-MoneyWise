@@ -1,0 +1,84 @@
+// 1. Fondo Global con Gradiente
+ion-content {
+  --background: none;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%) !important;
+
+  // 2. Contenedor Centrador
+  .auth-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    padding: 20px;
+  }
+}
+
+// 3. La Tarjeta Blanca (Copia exacta de tu imagen)
+.auth-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 45px; // Curva pronunciada premium
+  padding: 40px 25px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+// 4. Encabezado (Icono y Títulos)
+.brand-header {
+  margin-bottom: 25px;
+  
+  ion-icon {
+    font-size: 80px;
+    color: #4c8dff;
+    margin-bottom: 10px;
+  }
+  
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0;
+  }
+  
+  p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+}
+
+// 5. Inputs Estilizados (Gris suave y redondeado)
+ion-item {
+  --background: #f1f4f9;
+  --border-radius: 18px;
+  --highlight-height: 0; // Quita la línea inferior de Ionic
+  margin-bottom: 15px;
+  --padding-start: 15px;
+  font-size: 0.95rem;
+
+  ion-label {
+    color: #7d8997 !important;
+  }
+}
+
+// 6. Botón Azul
+ion-button {
+  --border-radius: 15px;
+  --background: #3880ff;
+  height: 55px;
+  margin-top: 10px;
+  font-weight: 700;
+  text-transform: none;
+  width: 100%;
+}
+
+// 7. Enlace inferior
+.footer-link {
+  margin-top: 20px;
+  display: block;
+  color: #3880ff;
+  font-weight: 600;
+  text-decoration: none;
+}

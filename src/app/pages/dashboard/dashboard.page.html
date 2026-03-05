@@ -1,0 +1,50 @@
+<ion-content>
+  <div class="header-container">
+    <div class="user-info">
+      <h1>Hola, {{ user?.name || 'Usuario' }}</h1>
+      <ion-button fill="clear" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="icon-only" color="light"></ion-icon>
+      </ion-button>
+    </div>
+
+    <div class="balance-card">
+      <p>Saldo Total</p>
+      <h2>{{ totalBalance | currency }}</h2>
+      <div class="stats-row">
+        <div class="stat">
+          <ion-icon name="arrow-up-circle" color="success"></ion-icon>
+          <span>{{ totalIncome | currency }}</span>
+        </div>
+        <div class="stat">
+          <ion-icon name="arrow-down-circle" color="danger"></ion-icon>
+          <span>{{ totalExpenses | currency }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="transactions-list">
+    <h3>Actividad Reciente</h3>
+    
+    <ion-list lines="none">
+      <ion-item *ngIf="transactions.length === 0">
+        <ion-label class="ion-text-center">
+          <p>No hay movimientos registrados</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item class="transaction-item" *ngFor="let item of transactions">
+        <div [class]="'icon-box ' + item.type" slot="start">
+          <ion-icon [name]="item.type === 'income' ? 'arrow-up' : 'arrow-down'"></ion-icon>
+        </div>
+        <ion-label>
+          <h2>{{ item.category }}</h2>
+          <p>{{ item.date | date:'shortDate' }}</p>
+        </ion-label>
+        <ion-note slot="end" [color]="item.type === 'income' ? 'success' : 'danger'">
+          {{ item.type === 'income' ? '+' : '-' }}{{ item.amount | currency }}
+        </ion-note>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

@@ -1,0 +1,29 @@
+<ion-content>
+  <div class="auth-container">
+    <div class="auth-card ion-text-center">
+      
+      <div class="brand-header">
+        <ion-icon name="wallet"></ion-icon>
+        <h1>MoneyWise</h1>
+        <p>Gestiona tus finanzas con inteligencia</p>
+      </div>
+
+      <ion-item lines="none">
+        <ion-label position="floating">Correo electrónico</ion-label>
+        <ion-input type="email" [(ngModel)]="loginData.email"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input type="password" [(ngModel)]="loginData.password"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" (click)="onLogin()">
+        Iniciar Sesión
+      </ion-button>
+
+      <p class="footer-link" routerLink="/register">¿No tienes cuenta? Regístrate</p>
+      
+    </div>
+  </div>
+</ion-content>
