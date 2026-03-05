@@ -1,0 +1,46 @@
+ion-toolbar {
+  --background: #5e4cfc;
+  --color: white;
+}
+
+.custom-search {
+  --background: rgba(255, 255, 255, 0.2);
+  --color: white;
+  --placeholder-color: rgba(255, 255, 255, 0.7);
+  --icon-color: white;
+  padding: 0 16px 10px;
+}
+
+.filter-section {
+  padding: 15px;
+  background: white;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 10px;
+}
+
+.history-item {
+  --background: white;
+  margin: 8px 16px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+
+  .icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &.income { background: #e8f9ef; color: #10b981; }
+    &.expense { background: #fef2f2; color: #ef4444; }
+  }
+
+  ion-note {
+    font-weight: 800;
+    font-size: 1rem;
+    &.income { color: #10b981; }
+    &.expense { color: #1e293b; }
+  }
+}

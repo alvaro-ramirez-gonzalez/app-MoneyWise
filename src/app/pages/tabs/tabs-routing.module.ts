@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { TabsPage } from './tabs.page';
 
-// 1. Las rutas SIEMPRE van fuera de la clase
 const routes: Routes = [
   {
     path: '',
@@ -13,8 +12,8 @@ const routes: Routes = [
         loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardPageModule)
       },
       {
-        path: 'transacciones',
-        loadChildren: () => import('../transacciones/lista-transacciones/lista-transacciones.module').then(m => m.ListaTransaccionesPageModule)
+        path: 'profile',
+        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
       },
       {
         path: '',
@@ -22,11 +21,6 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: '/tabs/dashboard',
-    pathMatch: 'full'
   }
 ];
 
@@ -34,4 +28,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class TabsPageRoutingModule {} // 2. La clase queda vacía
+export class TabsPageRoutingModule {}

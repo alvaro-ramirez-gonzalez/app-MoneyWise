@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../core/services/services/auth.service';
+import { AuthService } from '../../core/services/auth.service'; 
+import { TransaccionService } from '../../core/services/transaccion.service'; // [x] Importado según estructura
 import { Router } from '@angular/router';
 import { Haptics, ImpactStyle } from '@capacitor/haptics'; 
-import { Transaction } from '../../core/models/transaction.model'; // 👈 Importación movida arriba
+import { Transaccion } from '../../core/models/transaccion.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,34 +12,50 @@ import { Transaction } from '../../core/models/transaction.model'; // 👈 Impor
   standalone: false
 })
 export class DashboardPage implements OnInit {
-  // Variables para el usuario y datos
-  user: any = null;
-  transactions: Transaction[] = []; // 👈 Ahora está correctamente dentro de la clase
   
-  // Variables de balance para la vista
-  totalBalance: number = 5240.50; 
-  totalIncome: number = 1200.00;
-  totalExpenses: number = 45.00;
+  user: any = null;
+  transactions: Transaccion[] = []; // Usamos el modelo creado
+  
+  totalBalance: number = 0; 
+  totalIncome: number = 0;
+  totalExpenses: number = 0;
 
   constructor(
     private authService: AuthService,
+    private transaccionSvc: TransaccionService, // Inyectamos el cerebro de las finanzas
     private router: Router
   ) { }
 
   ngOnInit() {
-    // Suscripción para obtener los datos del usuario logueado
-    this.authService.currentUser$.subscribe(userData => {
+    // [x] Corrección de tipo para userData (evita error TS7006)
+    this.authService.currentUser$.subscribe((userData: any) => {
       this.user = userData;
+    });
+
+    // [x] Cargar transacciones y calcular totales en tiempo real
+    this.transaccionSvc.transacciones$.subscribe((data: Transaccion[]) => {
+      this.transactions = data.slice(0, 5); // Solo las últimas 5 para el dashboard
+      this.calculateTotals(data);
     });
   }
 
-  // Función asíncrona para soportar los plugins de Capacitor
+  // Método para actualizar las tarjetas de colores del Dashboard
+  private calculateTotals(items: Transaccion[]) {
+    this.totalIncome = items
+      .filter(t => t.type === 'income')
+      .reduce((acc, t) => acc + t.amount, 0);
+
+    this.totalExpenses = items
+      .filter(t => t.type === 'expense')
+      .reduce((acc, t) => acc + t.amount, 0);
+
+    this.totalBalance = this.totalIncome - this.totalExpenses;
+  }
+
   async logout() {
     try {
-      // Feedback táctil con Haptics antes de salir
       await Haptics.impact({ style: ImpactStyle.Medium }); 
-      
-      await this.authService.logout(); //
+      await this.authService.logout(); 
       this.router.navigate(['/login']);
     } catch (error) {
       console.error('Error al cerrar sesión', error);

@@ -1,50 +1,85 @@
-<ion-content>
-  <div class="header-container">
-    <div class="user-info">
-      <h1>Hola, {{ user?.name || 'Usuario' }}</h1>
-      <ion-button fill="clear" (click)="logout()">
-        <ion-icon name="log-out-outline" slot="icon-only" color="light"></ion-icon>
+<ion-content [fullscreen]="true">
+  <div class="header-wrapper">
+    
+    <div class="user-info-bar">
+      <div class="welcome-text">
+        <span>BIENVENIDO DE NUEVO,</span>
+        <h1>{{ user?.name || 'Invitado' }}</h1>
+      </div>
+      <ion-button class="logout-action" fill="clear" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </div>
 
-    <div class="balance-card">
-      <p>Saldo Total</p>
-      <h2>{{ totalBalance | currency }}</h2>
-      <div class="stats-row">
-        <div class="stat">
-          <ion-icon name="arrow-up-circle" color="success"></ion-icon>
-          <span>{{ totalIncome | currency }}</span>
+    <div class="balance-card-container">
+      <div class="balance-card">
+        <span class="label">SALDO TOTAL</span>
+        <h2 class="main-amount">{{ totalBalance | currency }}</h2>
+        
+        <div class="card-pattern"></div>
+      </div>
+
+      <div class="stats-overlay">
+        <div class="summary-pill income">
+          <div class="icon-circle">
+            <ion-icon name="arrow-up"></ion-icon>
+          </div>
+          <div class="details">
+            <small>Ingresos</small>
+            <p>{{ totalIncome | currency }}</p>
+          </div>
         </div>
-        <div class="stat">
-          <ion-icon name="arrow-down-circle" color="danger"></ion-icon>
-          <span>{{ totalExpenses | currency }}</span>
+        
+        <div class="summary-pill expense">
+          <div class="icon-circle">
+            <ion-icon name="arrow-down"></ion-icon>
+          </div>
+          <div class="details">
+            <small>Gastos</small>
+            <p>{{ totalExpenses | currency }}</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="transactions-list">
-    <h3>Actividad Reciente</h3>
+  <div class="main-content-area">
+    <div class="section-title">
+      <h3>Actividad Reciente</h3>
+      <ion-button fill="clear" size="small">Ver todo</ion-button>
+    </div>
     
-    <ion-list lines="none">
-      <ion-item *ngIf="transactions.length === 0">
-        <ion-label class="ion-text-center">
-          <p>No hay movimientos registrados</p>
-        </ion-label>
-      </ion-item>
+    <ion-list lines="none" class="custom-list">
+      <div class="empty-state-container" *ngIf="transactions.length === 0">
+        <div class="illustration-box">
+          <ion-icon name="receipt-outline"></ion-icon>
+        </div>
+        <p>No hay movimientos registrados todavía.</p>
+        <ion-button fill="outline" shape="round" size="small">
+          Registrar primer gasto
+        </ion-button>
+      </div>
 
-      <ion-item class="transaction-item" *ngFor="let item of transactions">
-        <div [class]="'icon-box ' + item.type" slot="start">
-          <ion-icon [name]="item.type === 'income' ? 'arrow-up' : 'arrow-down'"></ion-icon>
+      <ion-item class="transaction-card" *ngFor="let item of transactions">
+        <div [class]="'category-icon ' + item.type" slot="start">
+          <ion-icon [name]="item.type === 'income' ? 'trending-up' : 'cart-outline'"></ion-icon>
         </div>
         <ion-label>
-          <h2>{{ item.category }}</h2>
-          <p>{{ item.date | date:'shortDate' }}</p>
+          <h2 class="category-name">{{ item.category }}</h2>
+          <p class="transaction-date">{{ item.date | date:'dd MMM, yyyy' }}</p>
         </ion-label>
-        <ion-note slot="end" [color]="item.type === 'income' ? 'success' : 'danger'">
-          {{ item.type === 'income' ? '+' : '-' }}{{ item.amount | currency }}
-        </ion-note>
+        <div slot="end" class="amount-group">
+          <span [class]="'amount-text ' + item.type">
+            {{ item.type === 'income' ? '+' : '-' }} {{ item.amount | currency }}
+          </span>
+        </div>
       </ion-item>
     </ion-list>
   </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
