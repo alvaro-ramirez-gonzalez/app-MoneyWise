@@ -1,0 +1,7 @@
+<ion-text [color]="tipo === 'ingreso' ? 'success' : (tipo === 'gasto' ? 'danger' : 'dark')" 
+          [class]="'amount-' + tamano">
+  <span class="monto-texto">
+    {{ tipo === 'ingreso' ? '+' : (tipo === 'gasto' ? '-' : '') }}
+    {{ monto | currency:'USD':'symbol':'1.2-2' }}
+  </span>
+</ion-text>

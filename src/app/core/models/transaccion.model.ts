@@ -1,9 +1,10 @@
 export interface Transaccion {
   id: string;
-  amount: number;       // El monto del movimiento
-  category: string;     // Ej: 'Comida', 'Sueldo', 'Transporte'
-  type: 'income' | 'expense'; // Solo permite estos dos valores
-  date: string;         // Fecha en formato ISO
-  note?: string;        // Nota opcional
-  icon?: string;        // Nombre del icono de Ionic (opcional)
+  amount: number;       // Antes: monto
+  category: string;     // Antes: categoria
+  type: 'income' | 'expense'; // Antes: 'ingreso' | 'gasto'
+  date: string;         // Antes: fecha
+  receipt?: string | null; // Antes: comprobante (RF-3)
+  note?: string;        // Antes: nota
+  icon?: string;        // Antes: icono
 }

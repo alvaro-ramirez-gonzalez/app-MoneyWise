@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service'; 
-import { TransaccionService } from '../../core/services/transaccion.service'; // [x] Importado según estructura
+import { TransaccionService } from '../../core/services/transaccion.service';
 import { Router } from '@angular/router';
 import { Haptics, ImpactStyle } from '@capacitor/haptics'; 
 import { Transaccion } from '../../core/models/transaccion.model';
+// [x] IMPORTANTE: Importar ModalController y el componente del formulario
+import { ModalController } from '@ionic/angular';
+import { NuevaTransaccionComponent } from '../transacciones/nueva-transaccion/nueva-transaccion.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +17,7 @@ import { Transaccion } from '../../core/models/transaccion.model';
 export class DashboardPage implements OnInit {
   
   user: any = null;
-  transactions: Transaccion[] = []; // Usamos el modelo creado
+  transactions: Transaccion[] = []; 
   
   totalBalance: number = 0; 
   totalIncome: number = 0;
@@ -22,24 +25,39 @@ export class DashboardPage implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private transaccionSvc: TransaccionService, // Inyectamos el cerebro de las finanzas
-    private router: Router
+    private transaccionSvc: TransaccionService,
+    private router: Router,
+    // [x] Inyectar ModalController
+    private modalCtrl: ModalController 
   ) { }
 
   ngOnInit() {
-    // [x] Corrección de tipo para userData (evita error TS7006)
     this.authService.currentUser$.subscribe((userData: any) => {
       this.user = userData;
     });
 
-    // [x] Cargar transacciones y calcular totales en tiempo real
     this.transaccionSvc.transacciones$.subscribe((data: Transaccion[]) => {
-      this.transactions = data.slice(0, 5); // Solo las últimas 5 para el dashboard
+      // Mostramos las 5 más recientes en el Dashboard
+      this.transactions = data.slice(0, 5); 
       this.calculateTotals(data);
     });
   }
 
-  // Método para actualizar las tarjetas de colores del Dashboard
+  // [x] Función para abrir el formulario que creamos antes
+  async abrirNuevaTransaccion() {
+    await Haptics.impact({ style: ImpactStyle.Light }); // Vibración suave al tocar el botón
+    
+    const modal = await this.modalCtrl.create({
+      component: NuevaTransaccionComponent,
+      // Esto crea el efecto de "tarjeta" que sube hasta la mitad (iOS style)
+      breakpoints: [0, 0.5, 0.85],
+      initialBreakpoint: 0.5,
+      handle: true // Añade la rayita para arrastrar el modal hacia abajo
+    });
+
+    return await modal.present();
+  }
+
   private calculateTotals(items: Transaccion[]) {
     this.totalIncome = items
       .filter(t => t.type === 'income')

@@ -5,43 +5,49 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  // BehaviorSubject para manejar el estado del usuario en tiempo real
+  // [x] Estado persistente con BehaviorSubject
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor() {
-    // Al iniciar, revisamos si ya hay un usuario en el almacenamiento del celular
-    const savedUser = localStorage.getItem('user_session');
-    if (savedUser) {
-      this.currentUserSubject.next(JSON.parse(savedUser));
+    // Al iniciar, recuperamos la sesión si existe para que no se cierre al refrescar
+    const savedSession = localStorage.getItem('user_session_active');
+    if (savedSession) {
+      this.currentUserSubject.next(JSON.parse(savedSession));
     }
   }
 
-  // Método que usa tu AuthGuard para dar permiso
+  // Método para el AuthGuard
   isAuthenticated(): boolean {
     return this.currentUserSubject.value !== null;
   }
 
-  // Lógica de Registro
+  // Registro: Guardamos los datos del usuario "creado"
   register(userData: any): boolean {
-    localStorage.setItem('user_session', JSON.stringify(userData));
-    this.currentUserSubject.next(userData);
-    return true;
+    localStorage.setItem('registered_user', JSON.stringify(userData));
+    // Opcional: Auto-login tras registrar
+    return this.login(userData.email, userData.password);
   }
 
- login(email: string, pass: string): boolean {
-  const savedUser = JSON.parse(localStorage.getItem('user_session') || '{}');
-  
-  // Validamos que el correo coincida y que la contraseña tenga exactamente 8
-  if (savedUser.email === email && pass === savedUser.password && pass.length === 8) {
-    this.currentUserSubject.next(savedUser);
-    return true;
+  login(email: string, pass: string): boolean {
+    // 1. Buscamos al usuario registrado
+    const savedUser = JSON.parse(localStorage.getItem('registered_user') || '{}');
+    
+    // 2. Validamos credenciales y longitud de password (8 caracteres)
+    if (savedUser.email === email && pass === savedUser.password && pass.length === 8) {
+      
+      // [x] IMPORTANTE: Guardamos la SESIÓN ACTIVA para que persista al recargar
+      localStorage.setItem('user_session_active', JSON.stringify(savedUser));
+      
+      this.currentUserSubject.next(savedUser);
+      return true;
+    }
+    return false;
   }
-  return false;
-}
-  // Cerrar sesión
+
   logout() {
-    localStorage.removeItem('user_session');
+    // [x] Limpiamos solo la sesión activa, mantenemos al usuario registrado si quieres
+    localStorage.removeItem('user_session_active');
     this.currentUserSubject.next(null);
   }
 }

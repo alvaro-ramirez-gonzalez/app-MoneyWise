@@ -1,0 +1,56 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Nueva Transacción</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()" color="medium">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="form-container">
+    
+    <ion-item lines="none" class="input-item">
+      <ion-label position="stacked">Monto</ion-label>
+      <ion-input type="number" [(ngModel)]="monto" placeholder="0.00" class="monto-input"></ion-input>
+    </ion-item>
+
+    <ion-segment [(ngModel)]="tipo" mode="ios" class="ion-margin-top">
+      <ion-segment-button value="income">
+        <ion-label>Ingreso</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="expense">
+        <ion-label>Gasto</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-item lines="none" class="input-item ion-margin-top">
+      <ion-label position="stacked">Categoría</ion-label>
+      <ion-select [(ngModel)]="categoria" placeholder="Selecciona una">
+        <ion-select-option value="Comida">Comida</ion-select-option>
+        <ion-select-option value="Sueldo">Sueldo</ion-select-option>
+        <ion-select-option value="Transporte">Transporte</ion-select-option>
+        <ion-select-option value="Ocio">Ocio</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <div class="ion-margin-top">
+      <ion-label style="margin-left: 16px; font-size: 14px; color: var(--ion-color-medium);">
+        Comprobante (Opcional)
+      </ion-label>
+      <app-photo-selector 
+        [fotoActual]="fotoComprobante" 
+        (onFotoSeleccionada)="manejarFoto($event)">
+      </app-photo-selector>
+    </div>
+
+    <ion-button 
+      expand="block" 
+      (click)="guardar()" 
+      [disabled]="!monto || monto <= 0 || !categoria"
+      class="ion-margin-top main-button">
+      Agregar Movimiento
+    </ion-button>
+    
+  </div>
+</ion-content>
