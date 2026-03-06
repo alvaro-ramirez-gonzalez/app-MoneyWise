@@ -9,32 +9,18 @@ import { Transaccion } from '../../../core/models/transaccion.model';
   standalone: false
 })
 export class ListaTransaccionesPage implements OnInit {
-  allTransactions: Transaccion[] = [];
-  filteredTransactions: Transaccion[] = [];
-  filterType: string = 'all';
-  searchTerm: string = '';
+  // Simplificamos: Usamos una sola lista y dejamos que los Pipes filtren en el HTML
+  transactions: Transaccion[] = [];
+  
+  // Variables vinculadas al [(ngModel)] del HTML para los Pipes
+  filterType: 'all' | 'income' | 'expense' = 'all';
+  searchText: string = '';
 
   constructor(private transaccionSvc: TransaccionService) {}
 
-  ngOnInit() {
-    // Escuchamos el BehaviorSubject del core service
-    this.transaccionSvc.transacciones$.subscribe(data => {
-      this.allTransactions = data;
-      this.filterData();
-    });
-  }
-
-  handleSearch(event: any) {
-    this.searchTerm = event.target.value.toLowerCase();
-    this.filterData();
-  }
-
-  filterData() {
-    this.filteredTransactions = this.allTransactions.filter(t => {
-      const matchesType = this.filterType === 'all' || t.type === this.filterType;
-      const matchesSearch = t.category.toLowerCase().includes(this.searchTerm) || 
-                            (t.note?.toLowerCase().includes(this.searchTerm));
-      return matchesType && matchesSearch;
-    });
-  }
-}
+ ngOnInit() {
+  // Cambia transactions$ por transacciones$ para que coincida con el servicio
+  this.transaccionSvc.transacciones$.subscribe((data: Transaccion[]) => { 
+    this.transactions = data;
+  });
+}}

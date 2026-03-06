@@ -3,15 +3,15 @@ import { Transaccion } from '../../core/models/transaccion.model';
 
 @Pipe({
   name: 'searchByText',
-  standalone: false 
+  standalone: false
 })
-export class SearchByTextPipe implements PipeTransform {
-  transform(items: Transaccion[], searchText: string): Transaccion[] {
-    if (!items) return [];
-    if (!searchText) return items;
-
-    const text = searchText.toLowerCase();
-    // Filtra por el texto en la descripción/nota
-    return items.filter(it => it.category.toLowerCase().includes(text));
+export class SearchPipe implements PipeTransform {
+  transform(transactions: Transaccion[], text: string): Transaccion[] {
+    if (!text || text.trim() === '') return transactions;
+    
+    // Ahora buscamos en 'category' en lugar de 'categoria'
+    return transactions.filter(t => 
+      t.category.toLowerCase().includes(text.toLowerCase())
+    );
   }
 }

@@ -1,13 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TransactionService } from './transaction';
+// Corregimos la ruta y el nombre del servicio para que coincida con transaccion.service.ts
+import { TransaccionService } from './transaccion.service'; 
 
-describe('TransactionService', () => {
-  let service: TransactionService;
+describe('TransaccionService', () => {
+  let service: TransaccionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TransactionService);
+    // Inyectamos el nombre correcto de la clase definida en tu servicio
+    service = TestBed.inject(TransaccionService);
   });
 
   it('should be created', () => {

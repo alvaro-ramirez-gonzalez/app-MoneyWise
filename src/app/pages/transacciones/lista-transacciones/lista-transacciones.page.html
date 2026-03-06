@@ -4,16 +4,16 @@
   </ion-toolbar>
   <ion-toolbar color="primary">
     <ion-searchbar 
-      placeholder="Buscar categoría o nota..." 
+      placeholder="Buscar categoría..." 
       class="custom-search"
-      (ionInput)="handleSearch($event)">
+      [(ngModel)]="searchText">
     </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="filter-section">
-    <ion-segment [(ngModel)]="filterType" (ionChange)="filterData()" mode="ios">
+    <ion-segment [(ngModel)]="filterType" mode="ios">
       <ion-segment-button value="all">
         <ion-label>Todos</ion-label>
       </ion-segment-button>
@@ -27,26 +27,35 @@
   </div>
 
   <ion-list lines="none" class="transaction-list">
-    <div class="empty-msg" *ngIf="filteredTransactions.length === 0">
-      <ion-icon name="search-outline"></ion-icon>
-      <p>No se encontraron movimientos.</p>
-    </div>
-
     <ion-item 
-      *ngFor="let item of filteredTransactions" 
+      *ngFor="let item of transactions | searchByText:searchText | filterByType:filterType" 
       [routerLink]="['/tabs/transacciones/detalle', item.id]"
       button
       class="history-item">
-      <div [class]="'icon-box ' + item.type" slot="start">
-        <ion-icon [name]="item.type === 'income' ? 'trending-up' : 'trending-down'"></ion-icon>
-      </div>
+      
+      <ion-thumbnail slot="start" *ngIf="item.receipt; else noPhoto">
+        <img [src]="item.receipt" style="border-radius: 8px;" />
+      </ion-thumbnail>
+      
+      <ng-template #noPhoto>
+        <div [class]="'icon-box ' + item.type" slot="start">
+          <ion-icon [name]="item.type === 'income' ? 'arrow-up-circle' : 'arrow-down-circle'"></ion-icon>
+        </div>
+      </ng-template>
+
       <ion-label>
         <h2>{{ item.category }}</h2>
-        <p>{{ item.date | date:'fullDate' }}</p>
+        <p>{{ item.date | date:'dd/MM/yyyy' }}</p>
       </ion-label>
-      <ion-note slot="end" [class]="item.type">
+
+      <ion-note slot="end" [class]="item.type" [color]="item.type === 'income' ? 'success' : 'danger'">
         {{ item.type === 'income' ? '+' : '-' }} {{ item.amount | currency }}
       </ion-note>
     </ion-item>
+
+    <div class="empty-msg" *ngIf="transactions.length === 0">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <p>No hay movimientos registrados.</p>
+    </div>
   </ion-list>
 </ion-content>

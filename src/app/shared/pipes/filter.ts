@@ -5,9 +5,11 @@ import { Transaccion } from '../../core/models/transaccion.model';
   name: 'filterByType',
   standalone: false
 })
-export class FilterByTypePipe implements PipeTransform {
-  transform(items: Transaccion[], type: string): Transaccion[] {
-    if (!items || !type || type === 'all') return items;
-    return items.filter(item => item.type === type);
+export class FilterPipe implements PipeTransform {
+  transform(transactions: Transaccion[], type: 'all' | 'income' | 'expense'): Transaccion[] {
+    if (!type || type === 'all') return transactions;
+    
+    // Filtramos usando la propiedad 'type' en inglés
+    return transactions.filter(t => t.type === type);
   }
 }

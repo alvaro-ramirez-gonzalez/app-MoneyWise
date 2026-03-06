@@ -1,35 +1,34 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common'; // Para el currency pipe
+import { IonicModule } from '@ionic/angular'; // Para componentes ion-
+import { FormsModule } from '@angular/forms';
 
+// Importa con los nombres EXACTOS que exportaste en los archivos de pipes
+import { FilterPipe } from './pipes/filter';
+import { SearchPipe } from './pipes/search';
 import { AmountDisplayComponent } from './components/amount-display/amount-display.component';
 import { PhotoSelectorComponent } from './components/photo-selector/photo-selector.component';
-import { FilterByTypePipe } from './pipes/filter';
-import { SearchByTextPipe } from './pipes/search';
 
 @NgModule({
   declarations: [
     AmountDisplayComponent,
     PhotoSelectorComponent,
-    FilterByTypePipe,
-    SearchByTextPipe
+    FilterPipe,
+    SearchPipe
   ],
   imports: [
     CommonModule,
     IonicModule,
-    FormsModule,
-    ReactiveFormsModule
+    FormsModule
   ],
   exports: [
     AmountDisplayComponent,
     PhotoSelectorComponent,
-    FilterByTypePipe,
-    SearchByTextPipe,
+    FilterPipe,
+    SearchPipe,
     CommonModule,
     IonicModule,
-    FormsModule,
-    ReactiveFormsModule
+    FormsModule
   ]
 })
 export class SharedModule { }

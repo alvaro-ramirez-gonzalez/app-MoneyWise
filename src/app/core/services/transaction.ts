@@ -1,35 +1,46 @@
 import { Injectable } from '@angular/core';
-import { Preferences } from '@capacitor/preferences';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Transaccion } from '../models/transaccion.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TransactionService {
-  private TRANSACTIONS_KEY = 'moneywise_transactions';
-
-  constructor() {}
-
+export class TransaccionService {
+  // Nombre de la llave para el almacenamiento local
+  private readonly STORAGE_KEY = 'moneywise_transactions';
   
-  async addTransaction(transaction: any) {
-    const transactions = await this.getTransactions();
-    transactions.unshift(transaction); 
-    await Preferences.set({
-      key: this.TRANSACTIONS_KEY,
-      value: JSON.stringify(transactions)
-    });
+  // Usamos BehaviorSubject para que todos los componentes vean los cambios en tiempo real
+  private transactionsSubject = new BehaviorSubject<Transaccion[]>([]);
+  public transactions$: Observable<Transaccion[]> = this.transactionsSubject.asObservable();
+
+  constructor() {
+    this.loadTransactions(); // Cargamos los datos apenas inicia la app
   }
 
- 
-  async getTransactions() {
-    const { value } = await Preferences.get({ key: this.TRANSACTIONS_KEY });
-    return value ? JSON.parse(value) : [];
+  // RF-2: Cargar datos desde el LocalStorage
+  private loadTransactions() {
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+    if (saved) {
+      this.transactionsSubject.next(JSON.parse(saved));
+    }
   }
 
-  // Calcular el saldo total
-  async getBalance() {
-    const transactions = await this.getTransactions();
-    return transactions.reduce((acc: number, item: any) => {
-      return item.type === 'ingreso' ? acc + item.amount : acc - item.amount;
-    }, 0);
+  // RF-2: Guardar una nueva transacción
+  addTransaccion(transaction: Transaccion) {
+    const current = this.transactionsSubject.value;
+    const updated = [transaction, ...current]; // Agregamos la nueva al principio
+    
+    // Actualizamos el estado de la app
+    this.transactionsSubject.next(updated);
+    
+    // Guardamos permanentemente en el dispositivo
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updated));
+  }
+
+  // Extra: Eliminar una transacción
+  deleteTransaction(id: string) {
+    const filtered = this.transactionsSubject.value.filter(t => t.id !== id);
+    this.transactionsSubject.next(filtered);
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filtered));
   }
 }
